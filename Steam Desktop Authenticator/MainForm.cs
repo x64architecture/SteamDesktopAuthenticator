@@ -139,11 +139,7 @@ namespace Steam_Desktop_Authenticator
             }
             catch (Exception)
             {
-                DialogResult res = MessageBox.Show("You are missing a dependency required to view your trade confirmations.\nWould you like to install it now?", "Trade confirmations failed to open", MessageBoxButtons.YesNo);
-                if (res == DialogResult.Yes)
-                {
-                    new InstallRedistribForm(true).ShowDialog();
-                }
+                MessageBox.Show("You are missing a dependency required to view your trade confirmations.?", "Trade confirmations failed to open");
             }
         }
 
@@ -680,6 +676,7 @@ namespace Steam_Desktop_Authenticator
 
         private void checkForUpdates()
         {
+            return;
             if (updateClient != null) return;
             updateClient = new WebClient();
             updateClient.DownloadStringCompleted += UpdateClient_DownloadStringCompleted;

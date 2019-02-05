@@ -20,16 +20,6 @@ namespace Steam_Desktop_Authenticator
         [Option('s', "silent", Required = false,
           HelpText = "Start minimized")]
         public bool Silent { get; set; }
-
-        [ParserState]
-        public IParserState LastParserState { get; set; }
-
-        [HelpOption]
-        public string GetUsage()
-        {
-            return HelpText.AutoBuild(this,
-              (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current));
-        }
     }
 
     static class Program
@@ -71,10 +61,6 @@ namespace Steam_Desktop_Authenticator
                 return;
             }
 
-            // Parse command line arguments
-            var options = new Options();
-            Parser.Default.ParseArguments(args, options);
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -101,11 +87,12 @@ namespace Steam_Desktop_Authenticator
                 }
             }
 
+            // Parse command line arguments
+            var result = Parser.Default.ParseArguments<Options>(args)
+                .WithParsed<Options>(options =>
+                {
             if (man.FirstRun)
             {
-                // Install VC++ Redist and wait
-                new InstallRedistribForm().ShowDialog();
-
                 if (man.Entries.Count > 0)
                 {
                     // Already has accounts, just run
@@ -127,6 +114,7 @@ namespace Steam_Desktop_Authenticator
                 mf.StartSilent(options.Silent);
                 Application.Run(mf);
             }
+                });
         }
     }
 }
